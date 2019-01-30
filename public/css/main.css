@@ -1,0 +1,63 @@
+body {
+    background-color: #222627;
+    color: white;
+    font-family: "Roboto";
+}
+
+h1 {
+    text-align: center;
+    margin: 100px 0 30px 0;
+}
+
+#schedule-div {
+    margin: 50px auto 0px auto;
+    display: grid;
+    grid-template-columns: repeat(7,120px);
+    grid-template-rows: 50px repeat(24,70px);
+    justify-content: center;
+}
+
+.schedule-cell {
+    background-color:whitesmoke;
+    border: 2px solid black;
+    height: 70px;
+    color: black;
+    line-height: 70px;
+    text-align: center;
+}
+
+.schedule-cell:hover {
+    background-color: #c4c4c4;
+}
+
+.schedule-cell-clicked {
+    background-color: #27bc1a;
+    border: 2px solid black;
+    height: 70px;
+    color: black;
+    line-height: 70px;
+    text-align: center;
+}
+
+.schedule-day {
+    background-color: gray;
+    border: 2px solid black;
+    height: 50px;
+    color: black;
+    line-height: 50px;
+    text-align: center;
+}
+
+#submit-time {
+    margin: 100px auto 70px auto;
+    background: red;
+    display: block;
+    width: 150px;
+    height: 55px;
+    border-radius: 25px;
+    font-family: "Roboto";
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-shadow: 3px 2px 1px #000;
+}
