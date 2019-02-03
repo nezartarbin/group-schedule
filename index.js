@@ -1,9 +1,14 @@
 //importing express and bodyparsers
 const express = require("express");
 const bodyParser = require('body-parser');
+const Mongo = require("mongodb").MongoClient;
 
 //initializing express app
 const app = express();
+
+const dburl = "mongodb://localhost:27017";
+const client = new Mongo(dburl);
+const dbName = "group-schedules";
 
 //mounting bodyparser
 //bodyParser will parse HTTP request body for us
@@ -22,9 +27,16 @@ app.get("/css/main.css", (req,res,next) => {
 //handling post request
 app.post('/user', (req,res,next) => {
     console.log(req.body);
+    addDocument("group1", req.body);
 });
 
 //defining server listener
 app.listen(3000, () => {
     console.log(`Server started on port 3000...`);
 });
+
+function addDocument(coll,doc) {
+    client.connect(() => {
+        client.db(dbName).collection(coll).insertOne(doc, (err, result) => {console.log(JSON.stringify(result.ops))})
+    })
+}

@@ -30,22 +30,38 @@
                 array named "availability"*/
                 clickedDivs.forEach((clickedDiv) => {
                     availability.push(clickedDiv.timeValue);
-                })
+                });
+
+                var submission = {
+                    "_id": document.querySelector("#id").value,
+                    "username": document.querySelector("#username").value,
+                    "availability": availability
+                };
 
                 //We make a post request using axios. "availability" will be our request body
-                axios.post('/user', availability)
+                axios.post('/user', submission)
                 .then((res) => {
                     console.log(response);
                 }).catch((err) => {
                     console.log(err);
                 })
-            }
+            };
+
+            function timeOffset(days) {
+                scheduleTime = new Date(scheduleTime.getFullYear(), scheduleTime.getMonth(), (scheduleTime.getDate() + days));
+            };
          </script>
     </head>
 
     <body>
         <h1> Group Schedule </h1>
         <!--schedule-div is a grid container, or wrapper-->
+        <p id="time"></p>
+        <div id="buttons">
+            <button class="time" onclick="timeOffset(-7); scheduleGenerate();" >&#8249;</button>
+            <button class ="time" onclick="scheduleTime = currentTime; scheduleGenerate();">Reset</button>
+            <button class="time" onclick="timeOffset(7); scheduleGenerate();">&#8250;</button>
+        </div>
         <div id="schedule-div">
             <!--We need to create a grid (table) of time slots.
             we could make every div individually, but this is not
@@ -56,71 +72,38 @@
             Each slot needs to have the hour of the day written on it.-->
 
             <script>
-                /* var hour will store a placeholder for the hour number
-                which will be written on each div. When we move down a row,
-                "hour" needs to change accordingly */
-                var hour = 11
+                const currentTime = new Date();
+                var scheduleTime = currentTime;
 
-                //an Array of weekdays. We will use it later.
-                var weekDay = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+                const dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug", "Sep", "Oct", "Nov", "Dec"];
 
-                /* We make our divs here. With one for loop, we will make all.
-                7 columns (for each day of the weak), 25 rows (1 for days and
-                24 for each hour) totalling 175 divs.*/
-                for (i=0; i < 175; i++) {
-                    //We create the div element. We did not write it in the document yet.
-                    var childDiv = document.createElement("div");
+                function scheduleGenerate() {
+                    document.querySelector("#schedule-div").innerHTML=null;
+                    for (weekday=0; weekday < 7; weekday++) {
+                        var labelDiv = document.createElement("div");
+                        labelDiv.className = "schedule-label";
 
-                    /*By default, a time slot should have a click state of false.
-                    What's a clickstate? it is a property that will store information
-                    on whether the slot has been clicked (is active) or not. If it has
-                    not been clicked yet, it should be false, because user has not 
-                    selected it yet */
-                    childDiv.clickstate = false;
+                        let monthDate = scheduleTime.getDate() + (weekday - scheduleTime.getDay());
+                        labelDiv.time = new Date(scheduleTime.getFullYear(), scheduleTime.getMonth(), monthDate);
 
-                    //Each hour is either AM or PM
-                    /*each hour will be written 7 times before being clicked
-                    every 7 i's, hour increases by one. If it ever surpasses 12,
-                    then we crossed AM and started PM; afternoon*/
-                    if (i/7 < 13) {
-                        halfDay = "AM";
+                        labelDiv.innerHTML = dayName[weekday] + "<br>" + monthNames[labelDiv.time.getMonth()] + " " + labelDiv.time.getDate();
+                        document.querySelector("#schedule-div").appendChild(labelDiv);
+
+                        for (hour=0; hour < 24; hour++) {
+                            var childDiv = document.createElement("div");
+                            childDiv.clickstate = false;
+
+                            childDiv.time = new Date(scheduleTime.getFullYear(), scheduleTime.getMonth(), monthDate, hour);
+                            childDiv.className = "schedule-cell";
+                            childDiv.textContent = childDiv.time.toLocaleString('en-US', { hour: 'numeric', hour12: true });
+
+                            document.querySelector("#schedule-div").appendChild(childDiv);
+
+                            
+                        }
                     }
-                    else {
-                        halfDay = "PM";
-                    };
-
-                    //first 7 divs reserved for day of the week labels; first row.
-                    if(i < 7) {
-                        childDiv.className = "schedule-day";
-                        childDiv.textContent = weekDay[i];
-                    }
-
-                    //Remaining divs are time slots
-                    else {
-                        //Every time i has increased 7 times, we increase hour by 1
-                        if ((i%7) == 0) {hour++};
-                        //assign correct unclicked (neutral) class to the time slot
-                        childDiv.className = "schedule-cell";
-                        //we fill the slot with its hour. if it is 3, it'll say 3:00 PM
-                        childDiv.textContent = hour + ":00 " + halfDay;
-                        //store useful information in timeValue property
-                        //this info will be sent to our API using a post request
-                        childDiv.timeValue = {
-                            "hour": hour,
-                            "mid": halfDay,
-                            "day": weekDay[i%7]
-                        };
-                        //Once "hour" reaches 12 and completes a full row, it is reset to 0
-                        //This is only if we don't want a 24-hour system instead of AM/PM
-                        if (hour > 11 && (i%7) == 6) {hour = 0};
-                    }
-                    //Now that we have our div, we write in the document
-                    //We select the wrapper div we want to put it in, and insert (appendChild).
-                    document.querySelector("#schedule-div").appendChild(childDiv);
-                }
-
-                //with all our created divs ready, we select all of them and store them in "cells"
-                var cells = document.querySelectorAll(".schedule-cell");
+                    var cells = document.querySelectorAll(".schedule-cell");
 
                 /* we need to add an "onclick" event. It will change the color of the slot
                 when clicked, and remember that it was clicked by storing it in clickstate.
@@ -140,12 +123,15 @@
                         else {div.className = "schedule-cell"};
                     };
                 });
-                //delete dummy variables to clear memory.
-                delete hour;
-                delete weekDay;
+                }
+                scheduleGenerate();
             </script>
         </div>
         <!--submit button. When clicked, it will call function "poststuff() which is defined in head-->
-        <button id="submit-time" onclick="poststuff()">Submit</button>
+        <div id="formone">
+            username: <input type="text" id="username">
+            ID: <input type="text" id="id">
+            <button id="submit-time" onclick="poststuff()">Submit</button>
+        </div>
     </body>
 </html>

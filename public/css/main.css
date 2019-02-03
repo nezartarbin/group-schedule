@@ -2,6 +2,7 @@ body {
     background-color: #222627;
     color: white;
     font-family: "Roboto";
+    text-align: center;
 }
 
 h1 {
@@ -10,11 +11,12 @@ h1 {
 }
 
 #schedule-div {
-    margin: 50px auto 0px auto;
+    margin: 20px auto 0px auto;
     display: grid;
     grid-template-columns: repeat(7,120px);
-    grid-template-rows: 50px repeat(24,70px);
+    grid-template-rows: 80px repeat(24,70px);
     justify-content: center;
+    grid-auto-flow: column;
 }
 
 .schedule-cell {
@@ -24,6 +26,7 @@ h1 {
     color: black;
     line-height: 70px;
     text-align: center;
+    font-size: 1.15rem;
 }
 
 .schedule-cell:hover {
@@ -36,20 +39,23 @@ h1 {
     height: 70px;
     color: black;
     line-height: 70px;
+    font-size: 1.15rem;
     text-align: center;
 }
 
-.schedule-day {
+.schedule-label {
     background-color: gray;
     border: 2px solid black;
-    height: 50px;
+    height: 80px;
     color: black;
-    line-height: 50px;
+    line-height: 35px;
     text-align: center;
+    font-size: 1.2rem;
+    font-weight: 750;
 }
 
 #submit-time {
-    margin: 100px auto 70px auto;
+    margin: 30px auto;
     background: red;
     display: block;
     width: 150px;
@@ -60,4 +66,28 @@ h1 {
     font-weight: 600;
     color: #ffffff;
     text-shadow: 3px 2px 1px #000;
+}
+
+#formone {
+    width: 500px;
+    margin: 100px auto 70px auto;
+}
+
+#time {
+    text-align: center;
+}
+
+#buttons {
+    display: inline-block;
+}
+
+.time {
+    background: red;
+    border-radius: 0px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    font-family: "Roboto";
+    border: none;
+    margin: 20px 6px 0 6px;
+    padding: 4px 12px;
 }
