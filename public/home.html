@@ -9,47 +9,60 @@
         <!--importing Axios JS for HTTP requests-->
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script>
-            // creating a function that will make post Requests to our API
-            function poststuff() {
+            var availability = {};
 
-                //Select all active (clicked) schedule time slots using the "schedule-cell-clicked" class
-                //We assigned this class to all clicked time slots (div) in the body section
+            function isEmpty(obj) {
+                for(var key in obj) {
+                    if(obj.hasOwnProperty(key))
+                        return false;
+                }
+                return true;
+            }
 
-                var clickedDivs = document.querySelectorAll(".schedule-cell-clicked");
 
-                /*querySelectorAll returns an array. But each unit in the array does not
-                give is useful information. We need to extract useful data from it. In Body,
-                we saved useful information in a property called "timeValue". We need to make
-                an array of this useful information*/
+            function timeOffset(days) {
+                scheduleTime = new Date(scheduleTime.getFullYear(), scheduleTime.getMonth(), (scheduleTime.getDate() + days));
+            };
 
-                //first, we create an empty array
-                var availability = new Array;
+            function clickDiv() {
+                let daydiv = document.querySelectorAll(".schedule-label")[this.weekDay].time;
+                if (this.state.clicked == false) {
+                    let d = new Date(daydiv.getFullYear(),daydiv.getMonth(),daydiv.getDate(),this.hour);
+                    if (availability.hasOwnProperty(daydiv.getDate()) == false) {availability[daydiv.getDate()] = {}};
+                    availability[daydiv.getDate()][this.hour] = d;
+                    this.state.clicked = true;
+                    this.className = "schedule-cell-clicked";
+                }
+                else {
+                    delete availability[daydiv.getDate()][this.hour];
+                    if (isEmpty(availability[daydiv.getDate()]) == true) {delete availability[daydiv.getDate()]};
+                    this.state.clicked = false;
+                    this.className = "schedule-cell";
+                }
+                console.log(availability);
+            }
 
-                /* we iterate through the array of divs we selected earlier. From each
-                one, we extract the data we need (timeValue) and add it (push) to the empty
-                array named "availability"*/
-                clickedDivs.forEach((clickedDiv) => {
-                    availability.push(clickedDiv.timeValue);
-                });
-
-                var submission = {
-                    "_id": document.querySelector("#id").value,
-                    "username": document.querySelector("#username").value,
-                    "availability": availability
+            function postSchedule() {
+                let submission = {
+                    id: document.querySelector("#id").value,
+                    user: document.querySelector("#username").value,
+                    time: []
                 };
+                for (day in availability) {
+                    for (hour in availability[day]) {
+                        console.log(availability[day][hour]);
+                        submission.time.push(availability[day][hour]);
+                    }
+                }
+                console.log(submission);
 
-                //We make a post request using axios. "availability" will be our request body
                 axios.post('/user', submission)
                 .then((res) => {
                     console.log(response);
                 }).catch((err) => {
                     console.log(err);
                 })
-            };
-
-            function timeOffset(days) {
-                scheduleTime = new Date(scheduleTime.getFullYear(), scheduleTime.getMonth(), (scheduleTime.getDate() + days));
-            };
+            }
          </script>
     </head>
 
@@ -58,10 +71,11 @@
         <!--schedule-div is a grid container, or wrapper-->
         <p id="time"></p>
         <div id="buttons">
-            <button class="time" onclick="timeOffset(-7); scheduleGenerate();" >&#8249;</button>
-            <button class ="time" onclick="scheduleTime = currentTime; scheduleGenerate();">Reset</button>
-            <button class="time" onclick="timeOffset(7); scheduleGenerate();">&#8250;</button>
+            <button class="time" onclick="timeOffset(-7); timeConfig();" >&#8249;</button>
+            <button class ="time" onclick="scheduleTime = currentTime; availability = {}; timeConfig();">Reset</button>
+            <button class="time" onclick="timeOffset(7); timeConfig();">&#8250;</button>
         </div>
+        <div id="labels"></div>
         <div id="schedule-div">
             <!--We need to create a grid (table) of time slots.
             we could make every div individually, but this is not
@@ -71,7 +85,9 @@
             of the week in it, and then 24 rows of each hour of the day.
             Each slot needs to have the hour of the day written on it.-->
 
-            <script>
+        </div>
+
+        <script>
                 const currentTime = new Date();
                 var scheduleTime = currentTime;
 
@@ -79,59 +95,75 @@
                 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug", "Sep", "Oct", "Nov", "Dec"];
 
                 function scheduleGenerate() {
-                    document.querySelector("#schedule-div").innerHTML=null;
-                    for (weekday=0; weekday < 7; weekday++) {
+
+                    for (weekday=0; weekday<7; weekday++) {
                         var labelDiv = document.createElement("div");
-                        labelDiv.className = "schedule-label";
+                        labelDiv.className= "schedule-label";
+                        document.querySelector("#labels").appendChild(labelDiv);
+                    }
 
-                        let monthDate = scheduleTime.getDate() + (weekday - scheduleTime.getDay());
-                        labelDiv.time = new Date(scheduleTime.getFullYear(), scheduleTime.getMonth(), monthDate);
-
-                        labelDiv.innerHTML = dayName[weekday] + "<br>" + monthNames[labelDiv.time.getMonth()] + " " + labelDiv.time.getDate();
-                        document.querySelector("#schedule-div").appendChild(labelDiv);
-
-                        for (hour=0; hour < 24; hour++) {
+                    for (weekday=0; weekday<7;weekday++){
+                        for (i=0; i < 24; i++) {
                             var childDiv = document.createElement("div");
-                            childDiv.clickstate = false;
+                            //childDiv.clickstate = false;
 
-                            childDiv.time = new Date(scheduleTime.getFullYear(), scheduleTime.getMonth(), monthDate, hour);
+                            //childDiv.time = new Date(scheduleTime.getFullYear(), scheduleTime.getMonth(), monthDate, hour);
+                            childDiv.hour = i;
                             childDiv.className = "schedule-cell";
-                            childDiv.textContent = childDiv.time.toLocaleString('en-US', { hour: 'numeric', hour12: true });
+
+                            let ampm = i >= 12 ? " PM" : " AM";
+                            let hour = i%12;
+                            hour = hour ? hour : 12;
+                            childDiv.textContent = hour + ampm;
+                            childDiv.weekDay = weekday;
+                            childDiv.state = {clicked: false};
 
                             document.querySelector("#schedule-div").appendChild(childDiv);
 
                             
                         }
                     }
-                    var cells = document.querySelectorAll(".schedule-cell");
-
-                /* we need to add an "onclick" event. It will change the color of the slot
-                when clicked, and remember that it was clicked by storing it in clickstate.
-                remember we set it to "false" by default*/
-
-                //"cells" is an array. To add "onclick", we need to access each item individually
-                //we iterate through it using forEach.
-                cells.forEach((div) => {
-                    div.onclick = () => {
-                        //whatever "clickstate" is, we make it the opposite.
-                        //if it's true, it becomes false. vice versa.
-                        div.clickstate = !div.clickstate;
-
-                        //if it has been clicked, we assign it "schedule-cell-clicked class"
-                        if (div.clickstate) {div.className = "schedule-cell-clicked"}
-                        //if it is not clicked, or clicked again, it is assigned the default "schedule-cell" class.
-                        else {div.className = "schedule-cell"};
-                    };
-                });
                 }
+
+                function timeConfig() {
+                    let weekday = 0;
+                    let labelDivs = document.querySelector("#labels").childNodes;
+                    labelDivs.forEach((div) => {
+                        let monthDate = scheduleTime.getDate() + (weekday - scheduleTime.getDay());
+                        div.time = new Date(scheduleTime.getFullYear(), scheduleTime.getMonth(), monthDate);
+
+                        div.innerHTML = dayName[weekday] + "<br>" + monthNames[div.time.getMonth()] + " " + div.time.getDate();
+                        weekday++;
+                    })
+
+                    Array.from(document.querySelector("#schedule-div").children).forEach((div) => {
+                        let time = labelDivs[div.weekDay].time;
+                        if (availability.hasOwnProperty(time.getDate())) {
+                            if (availability[time.getDate()].hasOwnProperty(div.hour)) {
+                                div.state.clicked = true;
+                                div.className = "schedule-cell-clicked";
+                            }
+                        }
+                        else {
+                            div.state.clicked = false;
+                            div.className = "schedule-cell";
+                        }
+                    })
+                }
+
                 scheduleGenerate();
+                timeConfig();
+
+                var cells = document.querySelectorAll(".schedule-cell");
+                cells.forEach((div) => {div.addEventListener("click",clickDiv)});
+            
             </script>
-        </div>
+
         <!--submit button. When clicked, it will call function "poststuff() which is defined in head-->
         <div id="formone">
             username: <input type="text" id="username">
             ID: <input type="text" id="id">
-            <button id="submit-time" onclick="poststuff()">Submit</button>
+            <button id="submit-time" onclick="postSchedule()">Submit</button>
         </div>
     </body>
 </html>

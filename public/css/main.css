@@ -11,12 +11,18 @@ h1 {
 }
 
 #schedule-div {
-    margin: 20px auto 0px auto;
     display: grid;
     grid-template-columns: repeat(7,120px);
-    grid-template-rows: 80px repeat(24,70px);
+    grid-template-rows: repeat(24,70px);
     justify-content: center;
     grid-auto-flow: column;
+}
+
+#labels {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(7,120px);
+    justify-content: center;
 }
 
 .schedule-cell {

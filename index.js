@@ -7,7 +7,7 @@ const Mongo = require("mongodb").MongoClient;
 const app = express();
 
 const dburl = "mongodb://localhost:27017";
-const client = new Mongo(dburl);
+const client = new Mongo(dburl, { useNewUrlParser: true });
 const dbName = "group-schedules";
 
 //mounting bodyparser
