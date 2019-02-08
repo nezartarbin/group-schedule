@@ -12,27 +12,29 @@ h1 {
 
 #schedule-div {
     display: grid;
-    grid-template-columns: repeat(7,120px);
-    grid-template-rows: repeat(24,70px);
+    grid-template-columns: repeat(7,111px);
+    grid-template-rows: repeat(24,82px);
     justify-content: center;
     grid-auto-flow: column;
 }
 
 #labels {
-    margin-top: 20px;
+    margin: 40px 0 18px 0;
     display: grid;
-    grid-template-columns: repeat(7,120px);
+    grid-template-columns: repeat(7,111px);
     justify-content: center;
 }
 
 .schedule-cell {
     background-color:whitesmoke;
-    border: 2px solid black;
-    height: 70px;
+    height: 76px;
+    width: 106px;
     color: black;
-    line-height: 70px;
     text-align: center;
     font-size: 1.15rem;
+    position: relative;
+    line-height: 76px;
+    border-radius: 6px;
 }
 
 .schedule-cell:hover {
@@ -41,23 +43,26 @@ h1 {
 
 .schedule-cell-clicked {
     background-color: #27bc1a;
-    border: 2px solid black;
-    height: 70px;
+    height: 76px;
+    width: 106px;
     color: black;
-    line-height: 70px;
-    font-size: 1.15rem;
     text-align: center;
+    font-size: 1.15rem;
+    position: relative;
+    line-height: 76px;
+    border-radius: 6px;
 }
 
 .schedule-label {
     background-color: gray;
-    border: 2px solid black;
     height: 80px;
+    width: 106px;
     color: black;
     line-height: 35px;
     text-align: center;
     font-size: 1.2rem;
     font-weight: 750;
+    border-radius: 6px;
 }
 
 #submit-time {
@@ -94,6 +99,22 @@ h1 {
     font-weight: 600;
     font-family: "Roboto";
     border: none;
+    line-height: 25px;
     margin: 20px 6px 0 6px;
     padding: 4px 12px;
+    border-radius: 6px;
+}
+
+.freqcount {
+    background-color: #e2dede;
+    width: 44px;
+    height: 22px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: inline-block;
+    line-height: normal;
+    font-size: 1.1rem;
+    border-radius: 6px;
+    color: #818181;
 }

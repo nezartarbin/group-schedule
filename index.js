@@ -25,10 +25,17 @@ app.get("/css/main.css", (req,res,next) => {
 });
 
 //handling post request
-app.post('/user', (req,res,next) => {
+app.post('/time', (req,res,next) => {
     console.log(req.body);
     addDocument("group1", req.body);
+    res.sendStatus(200);
 });
+
+app.get("/time", (req,res,next) => {
+    console.log(req.body);
+    console.log("time request");
+    findAllDocuments("group1").then((time) => res.json(time));
+})
 
 //defining server listener
 app.listen(3000, () => {
@@ -38,5 +45,13 @@ app.listen(3000, () => {
 function addDocument(coll,doc) {
     client.connect(() => {
         client.db(dbName).collection(coll).insertOne(doc, (err, result) => {console.log(JSON.stringify(result.ops))})
+    })
+}
+
+function findAllDocuments(coll) {
+    return client.connect().then(() => {
+        return client.db(dbName).collection(coll).find().toArray().then((docs) => {
+            return docs;
+        })
     })
 }
