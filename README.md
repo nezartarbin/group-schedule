@@ -5,6 +5,8 @@ and viewed later. This makes it easy for groups to be able to visualize
 other members' availability and time conflicts, and choose the time slots
 most optimal for all.
 
+![App interface](/screenshots/app-interface-top.PNG)
+
 ## Purpose
 The purpose of this app was to practice Javascript and Node JS
 This is the first application that I build completely independently, and was
@@ -38,7 +40,7 @@ to display the current week.
 *to be added*
 
 ## Technologies Used
-1. **Javscript (JS):** Front-end scriptin
+1. **Javscript (JS):** Front-end scripting language
 2. **Node.js:** Javascript runtime environment for executing JS
 code in the Back-end (or outside of the browser)
 3. **Axios:** Promise-based Javascript HTTP client for making HTTP requests.
