@@ -1,0 +1,36 @@
+body {
+    background-color: #2E1E0F;
+}
+
+.schedule-cell {
+    background-color: #88292F;
+    color: white;
+}
+
+.schedule-cell:hover {
+    background-color: rgb(185, 43, 53);
+}
+
+.schedule-cell-clicked {
+    background-color: #A77464;
+    color: white;
+}
+
+.schedule-label {
+    background-color: #A27E8E;
+    color: black;
+}
+
+.time {
+    background: #88292F;
+    color: white;
+}
+
+#submit-time {
+    background: #88292F;
+    color: white;
+}
+
+.freqcount {
+    background-color: #A2A79E;
+}

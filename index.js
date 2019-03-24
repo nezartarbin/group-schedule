@@ -24,6 +24,10 @@ app.get("/css/main.css", (req,res,next) => {
     res.sendFile(__dirname + "/public/css/main.css");
 });
 
+app.get("/css/alt-theme.css", (req,res,next) => {
+    res.sendFile(__dirname + "/public/css/alt-theme.css");
+});
+
 app.get("/scripts/script.js", (req,res,next) => {
     res.sendFile(__dirname + "/public/scripts/script.js");
 });

@@ -49,16 +49,17 @@ to display the current week.
 1. **Javscript (JS):** Front-end scripting language
 2. **Node.js:** Javascript runtime environment for executing JS
 code in the Back-end (or outside of the browser)
-3. **Axios:** Promise-based Javascript HTTP client for making HTTP requests.
+3. **NPM:** Node.js package manager.
+4. **Axios:** Promise-based Javascript HTTP client for making HTTP requests.
 in this project, it was used for making requests from the client-side to the server.
-4. **Express.js:** Web application framework for Node.js. In this project, it was 
+5. **Express.js:** Web application framework for Node.js. In this project, it was 
 used to handle HTTP requests from the client side and to manipulate the MongoDB
 Database.
-5. **MongoDB:** noSQL database program. MongoDB stores data in JSON-like
+6. **MongoDB:** noSQL database program. MongoDB stores data in JSON-like
 syntax, which makes it easy to use with Javascript and Node.
-6. **MongoDB Node.js Native Driver:** MongoDB's native driver for Node, which
+7. **MongoDB Node.js Native Driver:** MongoDB's native driver for Node, which
 is used to communicate between the API and MongoDB.
-7. **Google Fonts:** utilized Google's "Roboto" web font.
+8. **Google Fonts:** utilized Google's "Roboto" web font.
 
 ## To add later:
 - User Authentication

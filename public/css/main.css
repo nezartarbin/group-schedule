@@ -12,17 +12,26 @@ h1 {
 
 #schedule-div {
     display: grid;
-    grid-template-columns: repeat(7,111px);
-    grid-template-rows: repeat(24,82px);
+    /* grid-template-columns: repeat(7,111px);
+    grid-template-rows: repeat(24,82px); */
+    grid-template-columns: repeat(7,106px);
+    grid-template-rows: repeat(24,76px);
     justify-content: center;
     grid-auto-flow: column;
+    border-radius: 0 0 16px 16px;
+    overflow: hidden;
+    width: 742px;
+    margin: auto;
 }
 
 #labels {
-    margin: 40px 0 18px 0;
+    margin: 40px auto 4px auto;
     display: grid;
-    grid-template-columns: repeat(7,111px);
+    grid-template-columns: repeat(7,106px);
     justify-content: center;
+    border-radius: 10px 10px 0 0;
+    overflow: hidden;
+    width: 742px;
 }
 
 .schedule-cell {
@@ -34,7 +43,7 @@ h1 {
     font-size: 1.15rem;
     position: relative;
     line-height: 76px;
-    border-radius: 6px;
+    /* border-radius: 16px; */
 }
 
 .schedule-cell:hover {
@@ -50,7 +59,7 @@ h1 {
     font-size: 1.15rem;
     position: relative;
     line-height: 76px;
-    border-radius: 6px;
+    /* border-radius: 16px; */
 }
 
 .schedule-label {
@@ -62,7 +71,7 @@ h1 {
     text-align: center;
     font-size: 1.1rem;
     font-weight: 750;
-    border-radius: 6px;
+    /* border-radius: 16px; */
     padding-top: 8px;
     box-sizing: border-box;
 }
@@ -117,6 +126,6 @@ h1 {
     display: inline-block;
     line-height: normal;
     font-size: 1.1rem;
-    border-radius: 6px;
+    border-radius: 10px;
     color: #818181;
 }
