@@ -46,6 +46,7 @@ function isEmpty(obj) {
 }
 
 function clickDiv() {
+    console.log("enter");
     let daydiv = document.querySelectorAll(".schedule-label")[this.weekDay].time;
     let today = daydiv.getDate() + "_" + daydiv.getMonth() + "_" + daydiv.getFullYear();
     if (this.state.clicked == false) {
@@ -100,6 +101,7 @@ function createTimeSlot(hour, container) {
     childDiv.weekDay = weekDay;
     childDiv.state = {clicked: false};
     container.appendChild(childDiv);
+    childDiv.addEventListener("click", clickDiv);
     return childDiv;
 }
 
@@ -180,5 +182,5 @@ function timeConfig() {
     updateFrequencyCount(Array.from(document.querySelectorAll(".freqcount")), labelDivs);
 }
 
-var cells = document.querySelectorAll(".schedule-cell");
-cells.forEach((div) => {div.addEventListener("click",clickDiv)});
+// var cells = document.querySelectorAll(".schedule-cell");
+// cells.forEach((div) => {div.addEventListener("click",clickDiv)});

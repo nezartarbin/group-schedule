@@ -30,6 +30,7 @@ app.get("/scripts/script.js", (req,res,next) => {
 
 //handling post request
 app.post('/time', (req,res,next) => {
+    console.log("enter post req");
     console.log(req.body);
     addDocument("group1", req.body);
     res.sendStatus(200);

@@ -5,7 +5,7 @@ and viewed later. This makes it easy for groups to be able to visualize
 other members' availability and time conflicts, and choose the time slots
 most optimal for all.
 
-![App interface](/screenshots/app-interface-top.PNG)
+![App interface](/screenshots/app-interface-top-filled.PNG)
 
 ## Purpose
 The purpose of this app was to practice Javascript and Node JS
@@ -18,6 +18,7 @@ Thank you!
   - 7 columns constituting 7 days of the current week
   - 24 rows constituting each hour of the day, and one header row marking each
   day of the week and its date.
+  ![Blank app interface](/screenshots/app-interface-top-blank.PNG)
 - Each cell (except in header) displays the hour it references to in 12-hour format
 - Each cell shows a number in the corner (example: x2) which denotes the number of
 times this exact slot was selected and submitted before, as retrieved from the database
@@ -29,6 +30,11 @@ times this exact slot was selected and submitted before, as retrieved from the d
   what is highlighed in green based on what is stored in memory for that specific week
 - The "Reset" Button clears memory from selected time slots, and takes the user back
 to display the current week.
+- Submissions are saved in a local MongoDB database, and are organized by user
+- Each submission has a unique ID.
+    - The database will not allow more than one submission with the same ID.
+    - At this time, the unique ID is entered by the user along with the username
+    at the bottom. It is intended to change this later, and automatically assign a unique ID
 
 ### Logic and Code:
 #### Front-end:
@@ -52,6 +58,7 @@ Database.
 syntax, which makes it easy to use with Javascript and Node.
 6. **MongoDB Node.js Native Driver:** MongoDB's native driver for Node, which
 is used to communicate between the API and MongoDB.
+7. **Google Fonts:** utilized Google's "Roboto" web font.
 
 ## To add later:
 - User Authentication
@@ -65,9 +72,11 @@ is used to communicate between the API and MongoDB.
 - Ability to view which users chose a specific time slot
 - (Possibly a good idea?) dividing JS files
 - Add links to technologies used
+- Rename variables and functions with better names
 - ~~Ability to unhighlight and unselect a time slot by clicking again~~
 - ~~Ability to change between weeks~~
 - ~~Memorize selected time slots when changing between weeks without conflating selections~~
 - ~~Submit selections to a database~~
 - ~~retrieve and display previously-submitted time selections~~
 - ~~Assign username to each submission~~
+- ~~Split large functions into smaller functins for code clarity~~
