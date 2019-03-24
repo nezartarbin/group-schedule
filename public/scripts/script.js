@@ -1,9 +1,16 @@
+const currentTime = new Date();
+let scheduleTime = currentTime;
+const dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug", "Sep", "Oct", "Nov", "Dec"];
 var availability = {};
 var dbAvailability = {};
 
 axios.get("/time")
 .then((res) => {
     console.log(res.data);
+    //res.data contains schedule times separated by submission and user
+    //We destructure and then combine all availabilities into one object,
+    //wihtout user differentiation.
     for (i in res.data) {
         for (j in res.data[i].time) {
             if (dbAvailability.hasOwnProperty(j)) {
@@ -21,9 +28,14 @@ axios.get("/time")
             }
         }
     }
-    console.log("db");
-    console.log(dbAvailability);
-}).then(() => timeConfig()).catch((err) => console.log(err))
+}).then(() => {
+    scheduleGenerate();
+    timeConfig();
+}).catch((err) => console.log(err))
+
+function timeOffset(dayOffset) {
+    scheduleTime = new Date(scheduleTime.getFullYear(), scheduleTime.getMonth(), (scheduleTime.getDate() + dayOffset));
+};
 
 function isEmpty(obj) {
     for(var key in obj) {
@@ -32,11 +44,6 @@ function isEmpty(obj) {
     }
     return true;
 }
-
-
-function timeOffset(days) {
-    scheduleTime = new Date(scheduleTime.getFullYear(), scheduleTime.getMonth(), (scheduleTime.getDate() + days));
-};
 
 function clickDiv() {
     let daydiv = document.querySelectorAll(".schedule-label")[this.weekDay].time;
@@ -50,7 +57,9 @@ function clickDiv() {
     }
     else {
         delete availability[today][this.hour];
-        if (isEmpty(availability[today]) == true) {delete availability[today]};
+        if (isEmpty(availability[today]) == true) {
+            delete availability[today]
+        };
         this.state.clicked = false;
         this.className = "schedule-cell";
     }
@@ -67,102 +76,109 @@ function postSchedule() {
 
     axios.post('/time', submission)
     .then((res) => {
-        console.log(response);
+        console.log(res);
     }).catch((err) => {
         console.log(err);
     })
 }
 
-// sep
+function createDayLabel(container) {
+    let labelDiv = document.createElement("div");
+    labelDiv.className= "schedule-label";
+    container.appendChild(labelDiv);
+}
 
-const currentTime = new Date();
-            var scheduleTime = currentTime;
+function createTimeSlot(hour, container) {
+    var childDiv = document.createElement("div");
+    childDiv.hour = hour;
+    childDiv.className = "schedule-cell";
 
-            const dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug", "Sep", "Oct", "Nov", "Dec"];
+    let ampm = hour >= 12 ? " PM" : " AM";
+    hour = hour%12;
+    hour = hour ? hour : 12;
+    childDiv.textContent = hour + ampm;
+    childDiv.weekDay = weekDay;
+    childDiv.state = {clicked: false};
+    container.appendChild(childDiv);
+    return childDiv;
+}
 
-            function scheduleGenerate() {
+function createFrequencyCounter(hour,weekDay,container) {
+    var freqCount = document.createElement("div");
+    freqCount.className = "freqcount";
+    freqCount.count = 0;
+    freqCount.hour = hour;
+    freqCount.weekDay = weekDay;
+    container.appendChild(freqCount);
+}
 
-                for (weekday=0; weekday<7; weekday++) {
-                    let labelDiv = document.createElement("div");
-                    labelDiv.className= "schedule-label";
-                    document.querySelector("#labels").appendChild(labelDiv);
-                }
+function scheduleGenerate() {
+    const labelContainer = document.getElementById("labels");
+    const timeSlotContainer = document.querySelector("#schedule-div");
 
-                for (weekday=0; weekday<7;weekday++){
-                    for (i=0; i < 24; i++) {
-                        var childDiv = document.createElement("div");
-                        childDiv.hour = i;
-                        childDiv.className = "schedule-cell";
+    for (weekDay=0; weekDay<7;weekDay++){
+        createDayLabel(labelContainer);
+        for (i=0; i < 24; i++) {
+            const timeSlot = createTimeSlot(i,timeSlotContainer);
+            createFrequencyCounter(i,weekDay,timeSlot);
+        }
+    }
+}
 
-                        let ampm = i >= 12 ? " PM" : " AM";
-                        let hour = i%12;
-                        hour = hour ? hour : 12;
-                        childDiv.textContent = hour + ampm;
-                        childDiv.weekDay = weekday;
-                        childDiv.state = {clicked: false};
+function labelDayLabels(labelDivs) {
+    let weekday = 0;
+    console.log(labelDivs);
+    for (let i=0,len=labelDivs.length;i<len;i++) {
+        let monthDate = scheduleTime.getDate() + (weekday - scheduleTime.getDay());
+        labelDivs[i].time = new Date(scheduleTime.getFullYear(), scheduleTime.getMonth(), monthDate);
 
-                        var freqCount = document.createElement("div");
-                        freqCount.className = "freqcount";
-                        freqCount.count = 0;
-                        freqCount.hour = childDiv.hour;
-                        freqCount.weekDay = childDiv.weekDay;
+        labelDivs[i].innerHTML = dayName[weekday] + "<br>" + monthNames[labelDivs[i].time.getMonth()] + " " + labelDivs[i].time.getDate();
+        weekday++;
+    }
+}
 
-                        document.querySelector("#schedule-div").appendChild(childDiv);
-                        childDiv.appendChild(freqCount);
-                    }
-                }
+function updateClickedState(divs, labelDivs) {
+    for (let i=0,len=divs.length;i<len;i++) {
+        let div=divs[i];
+        let time = labelDivs[div.weekDay].time;
+        let today = time.getDate() + "_" + time.getMonth() + "_" + time.getFullYear();
+        if (availability.hasOwnProperty(today)) {
+            if (availability[today].hasOwnProperty(div.hour)) {
+                div.state.clicked = true;
+                div.className = "schedule-cell-clicked";
             }
+        }
+        else {
+            div.state.clicked = false;
+            div.className = "schedule-cell";
+        }
+    }
+}
 
-            function timeConfig() {
-                let weekday = 0;
-                let labelDivs = document.querySelector("#labels").childNodes;
-                labelDivs.forEach((div) => {
-                    let monthDate = scheduleTime.getDate() + (weekday - scheduleTime.getDay());
-                    div.time = new Date(scheduleTime.getFullYear(), scheduleTime.getMonth(), monthDate);
+function updateFrequencyCount(freqs, labelDivs) {
+    for (let i=0,len=freqs.length;i<len;i++) {
+        let freq = freqs[i];
+        let time = labelDivs[freq.weekDay].time;
+        let today = `${time.getDate()}_${time.getMonth()}_${time.getFullYear()}`;
+        if (dbAvailability.hasOwnProperty(today) && dbAvailability[today].hasOwnProperty(freq.hour)) {
+            freq.count = dbAvailability[today][freq.hour];
+        }
+        else {
+            freq.count = 0;
+        }
+        freq.textContent = "x " + freq.count;
+    }
+}
 
-                    div.innerHTML = dayName[weekday] + "<br>" + monthNames[div.time.getMonth()] + " " + div.time.getDate();
-                    weekday++;
-                })
+function timeConfig() {
+    //label header
+    var labelDivs = document.querySelector("#labels").children;
+    labelDayLabels(labelDivs);
 
-                Array.from(document.querySelector("#schedule-div").children).forEach((div) => {
-                    let time = labelDivs[div.weekDay].time;
-                    let today = time.getDate() + "_" + time.getMonth() + "_" + time.getFullYear();
-                    if (availability.hasOwnProperty(today)) {
-                        if (availability[today].hasOwnProperty(div.hour)) {
-                            div.state.clicked = true;
-                            div.className = "schedule-cell-clicked";
-                        }
-                    }
-                    else {
-                        div.state.clicked = false;
-                        div.className = "schedule-cell";
-                    }
-                })
+    //display a cell as clicked or unclicked based on what is in "availability".
+    updateClickedState(Array.from(document.querySelector("#schedule-div").children), labelDivs);
+    updateFrequencyCount(Array.from(document.querySelectorAll(".freqcount")), labelDivs);
+}
 
-                Array.from(document.querySelectorAll(".freqcount")).forEach((freq) => {
-                    console.log("enter");
-                    let time = labelDivs[freq.weekDay].time;
-                    let today = time.getDate() + "_" + time.getMonth() + "_" + time.getFullYear();
-                    if (dbAvailability.hasOwnProperty(today)) {
-                        if (dbAvailability[today].hasOwnProperty(freq.hour)) {
-                            console.log(dbAvailability[today][freq.hour]);
-                            freq.count = dbAvailability[today][freq.hour];
-                            console.log(freq.count);
-                        }
-                        else {
-                            freq.count = 0;
-                        }
-                    }
-                    else {
-                        freq.count = 0;
-                    }
-                    freq.textContent = "x " + freq.count;
-                })
-            }
-
-            scheduleGenerate();
-            // timeConfig();
-
-            var cells = document.querySelectorAll(".schedule-cell");
-            cells.forEach((div) => {div.addEventListener("click",clickDiv)});
+var cells = document.querySelectorAll(".schedule-cell");
+cells.forEach((div) => {div.addEventListener("click",clickDiv)});
