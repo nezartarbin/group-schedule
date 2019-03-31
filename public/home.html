@@ -16,19 +16,12 @@
         <!--schedule-div is a grid container, or wrapper-->
         <p id="time"></p>
         <div id="buttons">
-            <button class="time" onclick="timeOffset(-7); timeConfig();" >&#8249;</button>
-            <button class ="time" onclick="scheduleTime = currentTime; availability = {}; timeConfig();">Reset</button>
-            <button class="time" onclick="timeOffset(7); timeConfig();">&#8250;</button>
+            <button class="time" id="arrow-left">&#8249;</button>
+            <button class ="time" id="reset">Reset</button>
+            <button class="time" id="arrow-right">&#8250;</button>
         </div>
         <div id="labels"></div>
         <div id="schedule-div">
-            <!--We need to create a grid (table) of time slots.
-            we could make every div individually, but this is not
-            a good idea. Too many divs. we use Javascript.-->
-
-            <!--Our grid needs to consist of one row with every day
-            of the week in it, and then 24 rows of each hour of the day.
-            Each slot needs to have the hour of the day written on it.-->
 
         </div>
 
