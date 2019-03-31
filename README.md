@@ -5,7 +5,7 @@ and viewed later. This makes it easy for groups to be able to visualize
 other members' availability and time conflicts, and determine the best and most optimal time
 for scheduling an event, and ensure the most people can meet during that time.
 
-![App interface](/screenshots/app-interface-top-filled.PNG)
+![App interface](/screenshots/app-interface-top-filled-02.PNG)
 
 ## Purpose
 The purpose of this app was to practice Javascript and Node JS
@@ -29,7 +29,7 @@ for another user or another session.
   - 7 columns constituting 7 days of the current week
   - 24 rows constituting each hour of the day, and one header row marking each
   day of the week and its date.
-  ![Blank app interface](/screenshots/app-interface-top-blank.PNG)
+  ![Blank app interface](/screenshots/app-interface-top-blank-02.PNG)
 - Each cell (except in header) displays the hour it references to in 12-hour format
 - Each cell shows a number in the corner (example: x2) which denotes the number of
 times this exact slot was selected and submitted before, as retrieved from the database
